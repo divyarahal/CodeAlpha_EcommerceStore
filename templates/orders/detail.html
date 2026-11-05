@@ -1,0 +1,12 @@
+{% extends 'base.html' %}
+{% block title %}Order #{{ order.pk }}{% endblock %}
+{% block content %}
+<p class="crumbs"><a href="{% url 'orders:list' %}">My orders</a> / #{{ order.pk }}</p>
+<h1>Order #{{ order.pk }} <span class="status {{ order.status }}">{{ order.get_status_display }}</span></h1>
+<p class="muted">Placed on {{ order.created|date:"d M Y, H:i" }} · Delivering to {{ order.full_name }}, {{ order.address }}, {{ order.city }} {{ order.postal_code }}</p>
+<table class="table">
+  <thead><tr><th>Product</th><th>Price</th><th>Qty</th><th>Total</th></tr></thead>
+  <tbody>{% for i in order.items.all %}<tr><td>{{ i.product.name }}</td><td>₹{{ i.price }}</td><td>{{ i.quantity }}</td><td>₹{{ i.get_cost }}</td></tr>{% endfor %}</tbody>
+  <tfoot><tr><td colspan="3">Total</td><td><strong>₹{{ order.get_total_cost }}</strong></td></tr></tfoot>
+</table>
+{% endblock %}

@@ -1,0 +1,25 @@
+{% extends 'base.html' %}
+{% block title %}{% if category %}{{ category.name }}{% else %}Shop{% endif %}{% endblock %}
+{% block content %}
+<div class="layout">
+  <aside class="sidebar">
+    <h2>Categories</h2>
+    <ul>
+      <li><a href="{% url 'products:list' %}" {% if not category %}class="active"{% endif %}>All products</a></li>
+      {% for c in categories %}
+        <li><a href="{{ c.get_absolute_url }}" {% if category.pk == c.pk %}class="active"{% endif %}>{{ c.icon }} {{ c.name }}</a></li>
+      {% endfor %}
+    </ul>
+  </aside>
+  <section>
+    <h1>{% if query %}Results for “{{ query }}”{% elif category %}{{ category.name }}{% else %}All products{% endif %}</h1>
+    {% if products %}
+      <div class="grid">
+        {% for p in products %}{% include 'products/_card.html' %}{% endfor %}
+      </div>
+    {% else %}
+      <p class="empty">No products found. Try a different search or <a href="{% url 'products:list' %}">browse everything</a>.</p>
+    {% endif %}
+  </section>
+</div>
+{% endblock %}

@@ -1,0 +1,10 @@
+{% extends 'base.html' %}
+{% block title %}Order placed{% endblock %}
+{% block content %}
+<div class="center-box">
+  <h1>Thank you, order #{{ order.pk }} is placed</h1>
+  <p>We will deliver to {{ order.address }}, {{ order.city }} {{ order.postal_code }}. Total: <strong>₹{{ order.get_total_cost }}</strong>.</p>
+  <p class="actions"><a class="btn" href="{% url 'orders:detail' order.pk %}">View order</a>
+  <a class="btn ghost" href="{% url 'products:list' %}">Continue shopping</a></p>
+</div>
+{% endblock %}

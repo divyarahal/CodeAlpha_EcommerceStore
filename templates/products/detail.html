@@ -1,0 +1,29 @@
+{% extends 'base.html' %}
+{% block title %}{{ product.name }}{% endblock %}
+{% block content %}
+<p class="crumbs"><a href="{% url 'products:list' %}">Shop</a> / <a href="{{ product.category.get_absolute_url }}">{{ product.category.name }}</a> / {{ product.name }}</p>
+<div class="detail">
+  <div class="detail-img">
+    {% if product.image_url %}<img src="{{ product.image_url }}" alt="{{ product.name }}">
+    {% else %}<span class="ph big" aria-hidden="true">{{ product.category.icon|default:"🛍️" }}</span>{% endif %}
+  </div>
+  <div>
+    <h1>{{ product.name }}</h1>
+    <p class="price big-price">₹{{ product.price }}</p>
+    <p>{{ product.description|linebreaksbr }}</p>
+    {% if product.in_stock %}
+      <p class="ok">In stock ({{ product.stock }} available)</p>
+      <form method="post" action="{% url 'cart:add' product.id %}" class="row">{% csrf_token %}
+        <label for="qty">Quantity</label>
+        <select name="quantity" id="qty">{% for q in quantities %}<option value="{{ q }}">{{ q }}</option>{% endfor %}</select>
+        <input type="hidden" name="next" value="cart">
+        <button type="submit" class="btn">Add to cart</button>
+      </form>
+    {% else %}<p class="out">Out of stock</p>{% endif %}
+  </div>
+</div>
+{% if related %}
+  <h2>More in {{ product.category.name }}</h2>
+  <div class="grid">{% for p in related %}{% include 'products/_card.html' %}{% endfor %}</div>
+{% endif %}
+{% endblock %}
